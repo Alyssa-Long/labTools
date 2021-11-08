@@ -1,4 +1,4 @@
-classdef labData
+clcclassdef labData
 %labData    contains data collected in the lab, including kinematics,
 %           kinetics, and EMG signals.
 %

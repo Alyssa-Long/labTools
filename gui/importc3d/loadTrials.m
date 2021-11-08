@@ -294,15 +294,20 @@ for t=cell2mat(info.trialnums) %loop through each trial
             %aux(aux>(median(aux)+5*iqr(aux)) | aux <(median(aux)-5*iqr(aux)))=median(aux(:)); %Truncating samples outside the median+-5*iqr range
             aux=medfilt1(diff(aux),10,[],1);
             if secondFile
-                [~,timeScaleFactor,lagInSamples,~] = matchSignals(aux(:,1),aux(:,2));
+%                 [~,timeScaleFactor,lagInSamples,~] = matchSignals(aux(:,1),aux(:,2));
+                [~,timeScaleFactor,lagInSamples,~] = matchSignals(refAux,aux(:,2)); %DMMO and ARL change to deal w aligment
                 newRelData2 = resampleShiftAndScale(relData2,timeScaleFactor,lagInSamples,1); %Aligning relData2 to relData1. There is still the need to find the overall delay of the EMG system with respect to forceplate data.
             end
+%             if (t~=12)         % ARL change for CTR_04 adaptation trial only
+%                 {
             [~,timeScaleFactorA,lagInSamplesA,~] = matchSignals(refAux,aux(:,1));
             newRelData = resampleShiftAndScale(relData,1,lagInSamplesA,1);
             if secondFile
-                newRelData2 = resampleShiftAndScale(newRelData2,1,lagInSamplesA,1);
+                [~,timeScaleFactor,lagInSamples,~] = matchSignals(refAux,aux(:,2)); %DMMO and ARL change to deal w aligment
+                newRelData2 = resampleShiftAndScale(newRelData2,1,lagInSamples,1);  %DMMO and ARL change to deal w aligment
+%                  newRelData2 = resampleShiftAndScale(newRelData2,1,lagInSamplesA,1);
             end
-            
+%             }
             %Only keeping matrices of same size to one another:
             if secondFile
                 [auxData, auxData2] = truncateToSameLength(newRelData,newRelData2);
@@ -552,8 +557,8 @@ for t=cell2mat(info.trialnums) %loop through each trial
             % orientation is fake: orientation is local and unique to each sensor, which is affixed to a body segment.
         elseif info.EMGworks==1
             
-            [ACCList, allData,analogsInfo]=getEMGworksdataAcc(info.EMGList2 ,info.secEMGworksdir_location,info.EMGworksdir_location,fileList{t},emptyChannels1,emptyChannels2,EMGList);
-            Samplingfrequency=analogsInfo.frequency;
+%             [ACCList, allData,analogsInfo]=getEMGworksdataAcc(info.EMGList2 ,info.secEMGworksdir_location,info.EMGworksdir_location,fileList{t},emptyChannels1,emptyChannels2,EMGList);
+%             Samplingfrequency=analogsInfo.frequency;
             accData=[];%orientedLabTimeSeries(allData(1:13:end,:),0,Samplingfrequency,ACCList,orientation);
         end
         clear allData* relData* auxData*
